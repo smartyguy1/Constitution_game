@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge - Learn Indian Constitution</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Challenge</h1>
+        <p>{{ challenge.question }}</p>
+        <input type="text" id="answer" placeholder="Your answer">
+        <button onclick="checkAnswer()">Submit</button>
+        <p id="result"></p>
+        <a href="{{ url_for('index') }}" class="button">Back to Map</a>
+    </div>
+    <script>
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value;
+            fetch('/check_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    challenge_id: {{ challenge.id }},
+                    answer: answer
+                }),
+            })
+            
+            .then(response => response.json())
+            .then(data => {
+                if (data.correct) {
+                    document.getElementById('result').textContent = 'Correct!';
+                } else {
+                    document.getElementById('result').textContent = 'Incorrect. Try again!';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

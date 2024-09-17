@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Indian Constitution</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Learn Indian Constitution</h1>
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        <div class="road">
+            {% for lesson in lessons %}
+                {% if loop.previtem and lesson.group_id != loop.previtem.group_id %}
+                    <hr class="group-separator">
+                {% endif %}
+                <a href="{{ url_for('lesson' if not lesson.is_quiz else 'quiz', lesson_id=lesson.id) }}" 
+                   class="lesson-node {% if lesson.is_quiz %}quiz{% endif %} {% if lesson.id|string not in progress %}locked{% endif %}"
+                   {% if lesson.id|string not in progress %}onclick="return false;"{% endif %}>
+                    {% if lesson.is_quiz %}
+                        <span class="icon">❓</span>
+                    {% else %}
+                        <span class="icon">📚</span>
+                    {% endif %}
+                    {{ lesson.title }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
